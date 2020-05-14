@@ -55,29 +55,33 @@ namespace Snake
             List<Block> FindFood = null;
             List<Block> FindTail = null;
             Block ret = null;
-            FindFood = BFS(snakeQue, snakeQue[0], food);
-            if (FindFood != null)
+            FindFood = BFS(snakeQue, snakeQue[0], food);    //蛇头找食物
+            if (FindFood != null)   //若能找到食物
             {
-                FindTail = Movesnake(FindFood);
-                if (FindTail != null) ret = FindFood[FindFood.Count - 1];
+                FindTail = Movesnake(FindFood); //找到食物后能否回去找到尾巴
+                if (FindTail != null) ret = FindFood[FindFood.Count - 1];   //若找得到尾巴
             }
-            bool foodflag = true, tailflag = true;
-            if (FindFood == null || FindFood.Count == 0) foodflag = false;
-            if (FindTail == null || FindTail.Count == 0) tailflag = false;
-            if (foodflag == false || tailflag == false || ret == null) ret = Faraway();
+            bool foodflag = true, tailflag = true;  //标记能找到食物和尾巴
+            if (FindFood == null || FindFood.Count == 0) foodflag = false;  //标记找不到食物
+            if (FindTail == null || FindTail.Count == 0) tailflag = false;  //标记找到食物后找不到尾巴
+            if (foodflag == false || tailflag == false || ret == null)
+            {
+                int t = 1;
+                while (ret == null)
+                {
+                    ret = Faraway(t++);
+                }
+            } //都不可则追现在的尾巴，且走最远的距离
             return ret;
         }
 
         private Point Movebody(List<Block> snake, Block step, bool istest)
         {
             while (step == null) step = Strategy();
-            if (istest == false)
-            {
-                return step.Point;
-            }
-
-            int len = snake.Count;
-            len = len - 1;
+            if (istest == false) return step.Point;
+            //若为真蛇，则直接返回下一步的移动的坐标
+            //若为测试，则若吃到食物，就将蛇长延长
+            int len = snake.Count - 1;
             if (step.Point.X == food.Point.X && step.Point.Y == food.Point.Y)
             {
                 len++;
@@ -89,13 +93,13 @@ namespace Snake
                 snake[i].Point = snake[i - 1].Point;
             }
             snake[0].Point = step.Point;
-            return new Point();
+            return new Point(); //因为测试的蛇不需要返回值，所以返回空值
         }
 
 
         private List<Block> Movesnake(List<Block> road)
         {
-            List<Block> testSnake = new List<Block>();
+            List<Block> testSnake = new List<Block>();  //创建测试蛇
             foreach (Block item in snakeQue)
             {
                 Block nitem = new Block(new Point(item.Point.X, item.Point.Y));
@@ -112,27 +116,28 @@ namespace Snake
         }
 
 
-        private Block Faraway()
+        private Block Faraway(int count = 1)
         {
+            if (count >= snakeQue.Count) { return new Block(new Point(1,0)); }
+            
             Block[] director = new Block[4];
             double[] distance = new double[4];
             int nx = snakeQue[0].Point.X;
             int ny = snakeQue[0].Point.Y;
-            int fx = food.Point.X;
-            int fy = food.Point.Y;
+            int fx = snakeQue[snakeQue.Count - count].Point.X;
+            int fy = snakeQue[snakeQue.Count - count].Point.Y;
+
             for (int i = 0; i <= 3; i++)
             {
                 distance[i] = Math.Abs(nx + dir[i, 0] - fx) + Math.Abs(ny + dir[i, 1] - fy);
                 Block nnode = new Block(new Point(nx + dir[i, 0], ny + dir[i, 1]));
-                if ((!snakeQue.Contains(nnode) || (nnode.Point.X == snakeQue[snakeQue.Count - 1].Point.X && nnode.Point.Y == snakeQue[snakeQue.Count - 1].Point.Y)) && nnode.Point.X >= 0 && nnode.Point.X < width && nnode.Point.Y >= 0 && nnode.Point.Y < height)  //1.蛇身不包含该点 2.该点是蛇尾 ->满足其一则可行走 且在范围内
+                if ((!snakeQue.Contains(nnode) || (nnode.Point.X == snakeQue[snakeQue.Count - 1].Point.X && nnode.Point.Y == snakeQue[snakeQue.Count - 1].Point.Y)) && nnode.Point.X >= 0 && nnode.Point.X < width && nnode.Point.Y >= 0 && nnode.Point.Y < height)  //1.蛇身不包含该点 2.该点是目标点 ->满足其一则可行走 且在范围内
                 {
                     director[i] = nnode;
                 }
             }
-            for (int i = 0; i < distance.Length - 1; i++)   //冒泡排序，以距离食物的距离为排序标准，从小到大
-            {
+            for (int i = 0; i < distance.Length - 1; i++)   //冒泡排序，以距离食物的距离为排序标准，从大到小
                 for (int j = 0; j < distance.Length - 1 - i; j++)
-                {
                     if (distance[j] < distance[j + 1])
                     {
                         double temp = distance[j];
@@ -142,12 +147,10 @@ namespace Snake
                         distance[j + 1] = temp;
                         director[j + 1] = tem;
                     }
-                }
-            }
+
 
             for (int i = 0; i <= 3; i++)
-            {
-                if (director[i] != null)    //根据前面的 1.蛇身不包含该点 2.该点是蛇尾 3.该点在范围内 三个条件
+                if (director[i] != null)    //根据前面的 1.蛇身不包含该点 2.该点是目标点 3.该点在范围内 三个条件
                 {
                     List<Block> testSnake2 = new List<Block>(); //生成一条探路的蛇，copy原蛇
                     foreach (Block item in snakeQue)
@@ -155,15 +158,12 @@ namespace Snake
                         Block nnode = new Block(new Point(item.Point.X, item.Point.Y));
                         testSnake2.Add(nnode);
                     }
-                    Movebody(testSnake2, director[i], true);    //尝试让蛇吃到食物
-                    List<Block> farway = BFS(testSnake2, director[i], testSnake2[testSnake2.Count - 1]);    //测试吃到食物后还能否找到尾巴的位置
+                    Movebody(testSnake2, director[i], true);    //把蛇向该方向移动一位
+                    List<Block> farway = BFS(testSnake2, director[i], testSnake2[testSnake2.Count - Math.Max(count - 1, 1)]);    //测试移动后后还能否找到尾巴的位置
                     if (farway != null) //能找到说明该点可走
-                    {
                         return director[i];
-                    }
-                }
 
-            }
+                }
             return null;
         }
 

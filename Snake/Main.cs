@@ -63,8 +63,8 @@ namespace Snake
 
         private void Start()
         {
-            pause = false;
             menuStrip1.Enabled = false;
+            old_direction = new_direction = Direction.Left;
             score = 0; level = 0;
             label1.Text = "当前难度分：0" + "  当前得分：0" + "  ";
             graphics = Graphics.FromHwnd(pictureBox1.Handle);
@@ -78,8 +78,9 @@ namespace Snake
         private void End()
         {
             menuStrip1.Enabled = true;
-            // graphics.Clear(Color.White);
             snake.Clear();
+            timer1.Enabled = false;
+            pause = false;
             SaveRank saveRank = new SaveRank();
             saveRank.score = score * 10;
             saveRank.level = level.ToString("0.00");
