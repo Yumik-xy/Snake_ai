@@ -11,17 +11,19 @@ namespace Snake
         private int width;
         private int height;
         private List<Block> snakeQue;
+        private List<Block> othersnakeQue;
         private Block food;
         private Block head;
         int[,] dir = { { -1, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 } };
 
-        public SnakeAi(int width, int height, List<Block> snake, Block food)
+        public SnakeAi(int width, int height, List<Block> snakeQue, List<Block> othersnakeQue, Block food)
         {
             this.width = width;
             this.height = height;
-            this.snakeQue = snake;
+            this.snakeQue = snakeQue;
+            this.othersnakeQue = othersnakeQue;
             this.food = food;
-            this.head = snake[0];
+            this.head = snakeQue[0];
         }
 
         private int[,] RandomSort(int[,] sort)
@@ -55,7 +57,7 @@ namespace Snake
             List<Block> FindFood = null;
             List<Block> FindTail = null;
             Block ret = null;
-            FindFood = BFS(snakeQue, snakeQue[0], food);    //蛇头找食物
+            FindFood = BFS(snakeQue, head, food);    //蛇头找食物
             if (FindFood != null)   //若能找到食物
             {
                 FindTail = Movesnake(FindFood); //找到食物后能否回去找到尾巴
@@ -118,12 +120,12 @@ namespace Snake
 
         private Block Faraway(int count = 1)
         {
-            if (count >= snakeQue.Count) { return new Block(new Point(1,0)); }
-            
+            if (count >= snakeQue.Count) { return new Block(new Point(1, 0)); }
+
             Block[] director = new Block[4];
             double[] distance = new double[4];
-            int nx = snakeQue[0].Point.X;
-            int ny = snakeQue[0].Point.Y;
+            int nx = head.Point.X;
+            int ny = head.Point.Y;
             int fx = snakeQue[snakeQue.Count - count].Point.X;
             int fy = snakeQue[snakeQue.Count - count].Point.Y;
 
@@ -131,7 +133,7 @@ namespace Snake
             {
                 distance[i] = Math.Abs(nx + dir[i, 0] - fx) + Math.Abs(ny + dir[i, 1] - fy);
                 Block nnode = new Block(new Point(nx + dir[i, 0], ny + dir[i, 1]));
-                if ((!snakeQue.Contains(nnode) || (nnode.Point.X == snakeQue[snakeQue.Count - 1].Point.X && nnode.Point.Y == snakeQue[snakeQue.Count - 1].Point.Y)) && nnode.Point.X >= 0 && nnode.Point.X < width && nnode.Point.Y >= 0 && nnode.Point.Y < height)  //1.蛇身不包含该点 2.该点是目标点 ->满足其一则可行走 且在范围内
+                if ((!snakeQue.Contains(nnode) || (nnode.Point.X == snakeQue[snakeQue.Count - 1].Point.X && nnode.Point.Y == snakeQue[snakeQue.Count - 1].Point.Y)) && nnode.Point.X >= 0 && nnode.Point.X < width && nnode.Point.Y >= 0 && nnode.Point.Y < height && !othersnakeQue.Contains(nnode))  //1.蛇身不包含该点 2.该点是目标点 ->满足其一则可行走 且在范围内 不在另一条蛇身上
                 {
                     director[i] = nnode;
                 }
@@ -150,7 +152,7 @@ namespace Snake
 
 
             for (int i = 0; i <= 3; i++)
-                if (director[i] != null)    //根据前面的 1.蛇身不包含该点 2.该点是目标点 3.该点在范围内 三个条件
+                if (director[i] != null)    //根据前面的条件
                 {
                     List<Block> testSnake2 = new List<Block>(); //生成一条探路的蛇，copy原蛇
                     foreach (Block item in snakeQue)
@@ -169,56 +171,64 @@ namespace Snake
 
         private List<Block> BFS(List<Block> snake, Block s, Block e)
         {
-            dir = RandomSort(dir);
-            int[,] now = new int[width, height];
-            foreach (Block item in snake)
+            try
             {
-                now[item.Point.X, item.Point.Y] = 1;
-            }
-            now[snake[snake.Count - 1].Point.X, snake[snake.Count - 1].Point.Y] = 0;
-            //建立蛇的二维数组，尾巴不需要设为墙壁，因为跟着尾巴走死不了
-
-            int f = 1;
-            int t = 1;
-            Block[] serch = new Block[width * height + 5];
-            int[] preindex = new int[width * height + 5];
-            List<Block> backway = new List<Block>();
-            serch[t] = s;   //将头加入已搜索列表
-            t++;
-            if (s.Point.X == e.Point.X && s.Point.Y == e.Point.Y)   //头和终点重合，即可以走到
-            {
-                backway.Add(e);
-                return backway;
-            }
-            do
-            {
-                for (int i = 0; i <= 3; i++)
+                dir = RandomSort(dir);
+                int[,] now = new int[width, height];
+                foreach (Block item in snake)
                 {
-                    int nx = serch[f].Point.X + dir[i, 0];
-                    int ny = serch[f].Point.Y + dir[i, 1];
-                    if (nx < 0 || nx >= width || ny < 0 || ny >= height)    //分别向上下左右四个方向走
-                        continue;
-                    if (now[nx, ny] != 1 || (nx == e.Point.X && ny == e.Point.Y))   //若该方向非蛇身或墙壁或到达终点
-                    {
-                        Block n = new Block(new Point(nx, ny)); //将该点加入可行走列表
-                        now[nx, ny] = 1;    //则该点设为已经走到的点
-                        serch[t] = n;   //将该点Block类加入已搜索列表中
-                        preindex[t] = f;    //记住该点是第几步
-                        if (n.Point.X == e.Point.X && n.Point.Y == e.Point.Y)   //若走到了终点
-                        {
-                            while (preindex[t] != 0)    //根据行走了的步数反推到起点，加入backway列表中
-                            {
-                                backway.Add(serch[t]);
-                                t = preindex[t];
-                            }
-                            return backway;
-                        }
-                        t++;
-                    }
+                    now[item.Point.X, item.Point.Y] = 1;
                 }
-                f++;
-            } while (f < t);    //整个列表搜索完也找不到路径则返回null
-            return null;
+                now[snake[snake.Count - 1].Point.X, snake[snake.Count - 1].Point.Y] = 0;
+                foreach (Block item in othersnakeQue)
+                {
+                    now[item.Point.X, item.Point.Y] = 1;
+                }
+                //建立蛇的二维数组，尾巴不需要设为墙壁，因为跟着尾巴走死不了
+
+                int f = 1;
+                int t = 1;
+                Block[] serch = new Block[width * height + 5];
+                int[] preindex = new int[width * height + 5];
+                List<Block> backway = new List<Block>();
+                serch[t] = s;   //将头加入已搜索列表
+                t++;
+                if (s.Point.X == e.Point.X && s.Point.Y == e.Point.Y)   //头和终点重合，即可以走到
+                {
+                    backway.Add(e);
+                    return backway;
+                }
+                do
+                {
+                    for (int i = 0; i <= 3; i++)
+                    {
+                        int nx = serch[f].Point.X + dir[i, 0];
+                        int ny = serch[f].Point.Y + dir[i, 1];
+                        if (nx < 0 || nx >= width || ny < 0 || ny >= height)    //分别向上下左右四个方向走
+                            continue;
+                        if (now[nx, ny] != 1 || (nx == e.Point.X && ny == e.Point.Y))   //若该方向非蛇身或墙壁或到达终点
+                        {
+                            Block n = new Block(new Point(nx, ny)); //将该点加入可行走列表
+                            now[nx, ny] = 1;    //则该点设为已经走到的点
+                            serch[t] = n;   //将该点Block类加入已搜索列表中
+                            preindex[t] = f;    //记住该点是第几步
+                            if (n.Point.X == e.Point.X && n.Point.Y == e.Point.Y)   //若走到了终点
+                            {
+                                while (preindex[t] != 0)    //根据行走了的步数反推到起点，加入backway列表中
+                                {
+                                    backway.Add(serch[t]);
+                                    t = preindex[t];
+                                }
+                                return backway;
+                            }
+                            t++;
+                        }
+                    }
+                    f++;
+                } while (f < t);    //整个列表搜索完也找不到路径则返回null
+                return null;
+            }
+            catch { return null; }
         }
     }
 }

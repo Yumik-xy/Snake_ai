@@ -37,13 +37,17 @@
             this.高级ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.自定义ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.snakeAiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.排行榜ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.单人游戏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.单人AI游戏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.双人游戏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.对战AI游戏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aI对战游戏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -53,6 +57,7 @@
             this.menuStrip1.AutoSize = false;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.开始游戏ToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.排行榜ToolStripMenuItem,
             this.帮助ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -69,9 +74,7 @@
             this.中级ToolStripMenuItem,
             this.高级ToolStripMenuItem,
             this.toolStripSeparator1,
-            this.自定义ToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.snakeAiToolStripMenuItem});
+            this.自定义ToolStripMenuItem});
             this.开始游戏ToolStripMenuItem.Name = "开始游戏ToolStripMenuItem";
             this.开始游戏ToolStripMenuItem.ShowShortcutKeys = false;
             this.开始游戏ToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
@@ -109,18 +112,6 @@
             this.自定义ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.自定义ToolStripMenuItem.Text = "自定义";
             this.自定义ToolStripMenuItem.Click += new System.EventHandler(this.自定义ToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
-            // 
-            // snakeAiToolStripMenuItem
-            // 
-            this.snakeAiToolStripMenuItem.Name = "snakeAiToolStripMenuItem";
-            this.snakeAiToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.snakeAiToolStripMenuItem.Text = "SnakeAi";
-            this.snakeAiToolStripMenuItem.Click += new System.EventHandler(this.snakeAiToolStripMenuItem_Click);
             // 
             // 排行榜ToolStripMenuItem
             // 
@@ -165,7 +156,54 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             // 
-            // Main
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.单人游戏ToolStripMenuItem,
+            this.单人AI游戏ToolStripMenuItem,
+            this.双人游戏ToolStripMenuItem,
+            this.对战AI游戏ToolStripMenuItem,
+            this.aI对战游戏ToolStripMenuItem});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
+            this.toolStripMenuItem1.Text = "模式";
+            // 
+            // 单人游戏ToolStripMenuItem
+            // 
+            this.单人游戏ToolStripMenuItem.Name = "单人游戏ToolStripMenuItem";
+            this.单人游戏ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.单人游戏ToolStripMenuItem.Text = "单人游戏";
+            this.单人游戏ToolStripMenuItem.Click += new System.EventHandler(this.单人游戏ToolStripMenuItem_Click);
+            // 
+            // 单人AI游戏ToolStripMenuItem
+            // 
+            this.单人AI游戏ToolStripMenuItem.Name = "单人AI游戏ToolStripMenuItem";
+            this.单人AI游戏ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.单人AI游戏ToolStripMenuItem.Text = "单人AI游戏";
+            this.单人AI游戏ToolStripMenuItem.Click += new System.EventHandler(this.单人AI游戏ToolStripMenuItem_Click);
+            // 
+            // 双人游戏ToolStripMenuItem
+            // 
+            this.双人游戏ToolStripMenuItem.Name = "双人游戏ToolStripMenuItem";
+            this.双人游戏ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.双人游戏ToolStripMenuItem.Text = "双人游戏";
+            this.双人游戏ToolStripMenuItem.Click += new System.EventHandler(this.双人游戏ToolStripMenuItem_Click);
+            // 
+            // 对战AI游戏ToolStripMenuItem
+            // 
+            this.对战AI游戏ToolStripMenuItem.Name = "对战AI游戏ToolStripMenuItem";
+            this.对战AI游戏ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.对战AI游戏ToolStripMenuItem.Text = "对战AI游戏";
+            this.对战AI游戏ToolStripMenuItem.Click += new System.EventHandler(this.对战AI游戏ToolStripMenuItem_Click);
+            // 
+            // aI对战游戏ToolStripMenuItem
+            // 
+            this.aI对战游戏ToolStripMenuItem.Name = "aI对战游戏ToolStripMenuItem";
+            this.aI对战游戏ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aI对战游戏ToolStripMenuItem.Text = "AI对战游戏";
+            this.aI对战游戏ToolStripMenuItem.Click += new System.EventHandler(this.aI对战游戏ToolStripMenuItem_Click);
+            // 
+            // DoubleSnake
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -179,7 +217,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Main";
+            this.Name = "DoubleSnake";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "Snake - hxy";
             this.Load += new System.EventHandler(this.Main_Load);
@@ -205,8 +243,12 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem snakeAiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 单人游戏ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 单人AI游戏ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 双人游戏ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 对战AI游戏ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aI对战游戏ToolStripMenuItem;
     }
 }
 
