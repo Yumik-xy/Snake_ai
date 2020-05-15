@@ -10,8 +10,8 @@ namespace Snake
     {
         private int width;
         private int height;
-        private List<Block> snakeQue;
-        private List<Block> othersnakeQue;
+        private List<Block> snakeQue = new List<Block>();
+        private List<Block> othersnakeQue = new List<Block>();
         private Block food;
         private Block head;
         int[,] dir = { { -1, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 } };
@@ -20,8 +20,16 @@ namespace Snake
         {
             this.width = width;
             this.height = height;
-            this.snakeQue = snakeQue;
-            this.othersnakeQue = othersnakeQue;
+            //this.snakeQue = snakeQue;
+            //this.othersnakeQue = othersnakeQue;
+            foreach (Block item in snakeQue)
+            {
+                this.snakeQue.Add(new Block(new Point(item.Point.X, item.Point.Y)));
+            }
+            foreach (Block item in othersnakeQue)
+            {
+                this.othersnakeQue.Add(new Block(new Point(item.Point.X, item.Point.Y)));
+            }
             this.food = food;
             this.head = snakeQue[0];
         }
