@@ -86,7 +86,7 @@ namespace Snake
             }
             catch
             {
-                AddXml(new Rank(0, "UNKNOWN", "UNKNOWN"));
+                AddXml(new Rank());
                 xml.Load(Environment.CurrentDirectory + "\\Score.xml");
             }
 

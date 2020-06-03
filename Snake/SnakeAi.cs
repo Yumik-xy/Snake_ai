@@ -68,7 +68,7 @@ namespace Snake
             FindFood = BFS(snakeQue, head, food);    //蛇头找食物
             if (FindFood != null)   //若能找到食物
             {
-                FindTail = Movesnake(FindFood); //找到食物后能否回去找到尾巴
+                FindTail = Findtail(FindFood); //找到食物后能否回去找到尾巴
                 if (FindTail != null) ret = FindFood[FindFood.Count - 1];   //若找得到尾巴
             }
             bool foodflag = true, tailflag = true;  //标记能找到食物和尾巴
@@ -107,7 +107,7 @@ namespace Snake
         }
 
 
-        private List<Block> Movesnake(List<Block> road)
+        private List<Block> Findtail(List<Block> road)
         {
             List<Block> testSnake = new List<Block>();  //创建测试蛇
             foreach (Block item in snakeQue)

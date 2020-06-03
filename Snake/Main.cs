@@ -45,7 +45,7 @@ namespace Snake
             if (e.KeyCode == Keys.S) { new_direction2 = Direction.Down; return; }
             if (e.KeyCode == Keys.D) { new_direction2 = Direction.Right; return; }
             if (e.KeyCode == Keys.Q && timer1.Enabled == false && pause == false) { Start(); return; }
-            if (e.KeyCode == Keys.Space) { Pause(); return; }
+            if (e.KeyCode == Keys.Space && timer1.Enabled == true) { Pause(); return; }
         }
 
         private void Pause()
@@ -294,7 +294,7 @@ namespace Snake
                 for (int i = 1; i < snake1.Count; i++)
                     if (head.Point.X == snake1[i].Point.X && head.Point.Y == snake1[i].Point.Y)
                         ret = true;
-                for (int i = 0; i < snake2.Count; i++)
+                for (int i = 0; i < snake2.Count - 1; i++)
                     if (head.Point.X == snake2[i].Point.X && head.Point.Y == snake2[i].Point.Y)
                         ret = true;
             }
@@ -315,7 +315,7 @@ namespace Snake
                 for (int i = 1; i < snake2.Count; i++)
                     if (head.Point.X == snake2[i].Point.X && head.Point.Y == snake2[i].Point.Y)
                         ret = true;
-                for (int i = 0; i < snake1.Count; i++)
+                for (int i = 0; i < snake1.Count - 1; i++)
                     if (head.Point.X == snake1[i].Point.X && head.Point.Y == snake1[i].Point.Y)
                         ret = true;
             }
@@ -421,7 +421,6 @@ namespace Snake
         {
             Changelevel(wid, hig, spd);
         }
-
         private void Main_Load(object sender, EventArgs e)
         {
             单人游戏ToolStripMenuItem_Click(null, null);
